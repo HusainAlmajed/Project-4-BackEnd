@@ -26,8 +26,24 @@ const create = async (req, res) => {
     }
 }
 
+const show = async (req, res) => {
+    try {
+        const asset = await Asset.findById(req.params.id)
+        .populate('owner')
+        .populate('business')
+
+        if (!asset) {
+            return res.status(404).json({ message: 'Asset not found' })
+        }
+
+        res.status(200).json(asset)
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
 
 module.exports = {
     index,
-    create
+    create,
+    show
 }
