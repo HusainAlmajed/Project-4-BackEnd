@@ -31,7 +31,19 @@ const create = async (req, res) => {
     }
 }
 
+const show = async (req, res) => {
+    try{
+        const agreement = await Agreement.findById(req.params.agreementId)
+        .populate('owner')
+        .populate('customer')
+        .populate('asset')
+    }catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     index,
     create,
+    show,
 }
