@@ -18,6 +18,11 @@ const agreementSchema = new Schema({
         enum: ['active', 'expiring soon', 'expired'],
         default: 'active',
     },
+    asset: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Asset',
+        required: true,
+    },
 },{timestamps: true})
 
 const Agreement = mongoose.model('Agreement', agreementSchema)
