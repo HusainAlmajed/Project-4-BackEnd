@@ -7,6 +7,7 @@ const assetSchema = new mongoose.Schema({
     },
     type: {
         type: String,
+        enum: ['equipment', 'vehicle', 'property', 'electronic', 'other'],
         required: true,
     },
     owner: {
