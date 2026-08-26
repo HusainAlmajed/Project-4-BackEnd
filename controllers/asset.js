@@ -12,6 +12,22 @@ const index = async (req, res) => {
     }
 }
 
+const create = async (req, res) => {
+    try {
+        const asset = await Asset.create({
+            name: req.body.name,
+            type: req.body.type,
+            owner: req.user._id,
+            business: req.body.business,
+        })
+        res.status(201).json(asset)
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
+
 module.exports = {
-    index
+    index,
+    create
 }
