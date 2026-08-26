@@ -37,7 +37,26 @@ const show = async (req, res) => {
         .populate('owner')
         .populate('customer')
         .populate('asset')
+        if (!agreement) {
+            return res.status(404).json({ message: 'Agreement not found' });
+        }
     }catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const update = async (req, res) => {
+    try{
+        const agreement = await Agreement.findByIdAndUpdate(
+            req.params.agreementId,
+            req.body,
+            { new: true }
+        );
+        if (!agreement) {
+            return res.status(404).json({ message: 'Agreement not found' });
+        }
+        res.status(200).json(agreement);
+    } catch (error) {
         res.status(500).json({ message: error.message });
     }
 }
@@ -46,4 +65,5 @@ module.exports = {
     index,
     create,
     show,
+    update,
 }
