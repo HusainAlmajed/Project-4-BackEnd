@@ -46,10 +46,22 @@ const update = async (req , res) => {
         )
 
         if (!document) {
-            return res.status(404).json({ message: 'Docuemnt not found' })
+            return res.status(404).json({ message: 'Document not found' })
         }
 
         res.status(200).json(document)
+    } catch(error) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
+const deleteDocument = async (req , res) => {
+    try {
+        const document = await Document.findByIdAndDelete(req.params.documentId)
+        if (!document) {
+            return res.status(404).json({ message: 'Document not found' })
+        }
+        res.status(200).json({ message: 'Document deleted successfully' })
     } catch(error) {
         res.status(500).json({ message: error.message })
     }
@@ -60,4 +72,5 @@ module.exports = {
     create,
     show,
     update,
+    deleteDocument,
 }
