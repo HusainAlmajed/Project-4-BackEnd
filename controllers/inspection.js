@@ -56,9 +56,24 @@ const update = async (req , res) => {
     }
 }
 
+const deleteInspection = async (req , res) => {
+    try{
+        const inspection = await Inspection.findByIdAndDelete(req.params.inspectionId)
+
+        if (!inspection) {
+            return res.status(404).json({ message: 'Inspection not found' })
+        }
+
+        res.status(200).json({ message: 'Inspection deleted successfully' })
+    } catch(error) {    
+        res.status(500).json({ message: error.message })
+    }
+}
+
 module.exports = {
     index,
     create,
     show,
     update,
+    deleteInspection,
 }
