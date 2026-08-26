@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const agreementSchema = new Schema({
+const agreementSchema = new  mongoose.Schema({
     type: {
         type: String,
         required: true,
@@ -18,6 +18,16 @@ const agreementSchema = new Schema({
         enum: ['active', 'expiring soon', 'expired'],
         default: 'active',
     },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
+    customer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
     asset: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Asset',
@@ -26,3 +36,4 @@ const agreementSchema = new Schema({
 },{timestamps: true})
 
 const Agreement = mongoose.model('Agreement', agreementSchema)
+module.exports = Agreement
