@@ -28,24 +28,25 @@ const create = async (req, res) => {
 
 const show = async (req, res) => {
     try {
-        const asset = await Asset.findById(req.params.id)
-        .populate('owner')
-        .populate('business')
+        const asset = await Asset.findById(req.params.assetId)
+            .populate('owner')
+            .populate('business');
 
         if (!asset) {
-            return res.status(404).json({ message: 'Asset not found' })
+            return res.status(404).json({ message: 'Asset not found' });
         }
 
-        res.status(200).json(asset)
+        res.status(200).json(asset);
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
-}
+};
+
 
 const update = async (req, res) => {
     try {
         const asset = await Asset.findByIdAndUpdate(
-            req.params.id, 
+            req.params.assetId, 
             req.body,
             { new: true }
             )
@@ -60,7 +61,7 @@ const update = async (req, res) => {
 
 const deleteAsset = async (req, res) => {
     try {
-        const asset = await Asset.findByIdAndDelete(req.params.id)
+        const asset = await Asset.findByIdAndDelete(req.params.assetId)
         if (!asset) {
             return res.status(404).json({ message: 'Asset not found' })
         }
