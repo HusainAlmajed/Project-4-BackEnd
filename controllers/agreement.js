@@ -22,7 +22,7 @@ const create = async (req, res) => {
             status: req.body.status,
             description: req.body.description,
             owner: req.user._id,
-            customer: req.user._id,
+            customer: req.body.customer,
             asset: req.body.asset,
         });
         res.status(201).json(agreement);
@@ -40,6 +40,7 @@ const show = async (req, res) => {
         if (!agreement) {
             return res.status(404).json({ message: 'Agreement not found' });
         }
+        res.status(200).json(agreement);
     }catch (error) {
         res.status(500).json({ message: error.message });
     }
