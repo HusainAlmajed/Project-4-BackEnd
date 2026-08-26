@@ -33,6 +33,9 @@ app.get("/", (req, res) => {
   res.send("Backend is working!");
 });
 
+// Routes
+
+
 // Start server
 app.listen(PORT, () => {
   console.log(`The Express app is ready on port ${PORT}! 😀`);
