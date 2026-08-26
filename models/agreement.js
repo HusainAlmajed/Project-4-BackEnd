@@ -19,6 +19,10 @@ const agreementSchema = new  mongoose.Schema({
         enum: ['active', 'expiring soon', 'expired'],
         default: 'active',
     },
+    description: {
+        type: String,
+        required: false,
+    },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
