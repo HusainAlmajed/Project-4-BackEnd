@@ -61,9 +61,22 @@ const update = async (req, res) => {
     }
 }
 
+const deleteAgreement = async (req, res) => {
+    try {
+        const agreement = await Agreement.findByIdAndDelete(req.params.agreementId);
+        if (!agreement) {
+            return res.status(404).json({ message: 'Agreement not found' });
+        }
+        res.status(200).json({ message: 'Agreement deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     index,
     create,
     show,
     update,
+    deleteAgreement,
 }
