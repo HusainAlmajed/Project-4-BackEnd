@@ -13,7 +13,7 @@ const businessSchema = new mongoose.Schema({
     type: {
         type: String,
         enum: ["shop", "property", 'insurance'],
-        default: "customer",
+        required: true,
     },
     customers: [
         {
