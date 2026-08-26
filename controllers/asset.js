@@ -42,8 +42,25 @@ const show = async (req, res) => {
     }
 }
 
+const update = async (req, res) => {
+    try {
+        const asset = await Asset.findByIdAndUpdate(
+            req.params.id, 
+            req.body,
+            { new: true }
+            )
+        if (!asset) {
+            return res.status(404).json({ message: 'Asset not found' })
+        }
+        res.status(200).json(asset)
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
 module.exports = {
     index,
     create,
-    show
+    show,
+    update
 }
