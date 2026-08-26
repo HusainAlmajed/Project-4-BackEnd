@@ -10,7 +10,21 @@ const index = async (req , res) => {
     }
 }
 
+const create = async (req , res) => {
+    try{
+        const document = await Document.create({
+            title: req.body.title,
+            documentType: req.body.documentType,
+            url: req.body.url,
+            agreement: req.body.agreement,
+        })
+        res.status(201).json(document)
+    } catch(error) {
+        res.status(500).json({ message: error.message })
+    }
+}
 
 module.exports = {
     index,
+    create,
 }
