@@ -39,8 +39,26 @@ const show = async (req , res) => {
     }
 }
 
+const update = async (req , res) => {
+    try {
+        const inspection = await Inspection.findByIdAndUpdate(
+            req.params.inspectionId,
+            req.body,
+            { new: true }
+        )
+
+        if (!inspection) {
+            return res.status(404).json({ message: 'Inspection not found '})
+        }
+        res.status(200).json(inspection)
+    } catch(error) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
 module.exports = {
     index,
     create,
     show,
+    update,
 }
