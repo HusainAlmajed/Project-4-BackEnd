@@ -13,6 +13,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const verifyToken = require("./middleware/verify-token");
+const assetCtrl = require("./controllers/asset");
+const agreementCtrl = require("./controllers/agreement");
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI);
@@ -35,7 +37,19 @@ app.get("/", (req, res) => {
   res.send("Backend is working!");
 });
 
-// Routes
+// Asset Routes
+app.get("/assets", verifyToken, assetCtrl.index);
+app.post("/assets", verifyToken, assetCtrl.create);
+app.get("/assets/:assetId", verifyToken, assetCtrl.show);
+app.put("/assets/:assetId", verifyToken, assetCtrl.update);
+app.delete("/assets/:assetId", verifyToken, assetCtrl.deleteAsset);
+
+// Agreement Routes
+app.get("/agreements", verifyToken, agreementCtrl.index);
+app.post("/agreements", verifyToken, agreementCtrl.create);
+app.get("/agreements/:agreementId", verifyToken, agreementCtrl.show);
+app.put("/agreements/:agreementId", verifyToken, agreementCtrl.update);
+app.delete("/agreements/:agreementId", verifyToken, agreementCtrl.deleteAgreement);
 
 
 // Start server
