@@ -37,8 +37,27 @@ const show = async (req , res) => {
     }
 }
 
+const update = async (req , res) => {
+    try{
+        const document = await Document.findByIdAndUpdate(
+            req.params.documentId,
+            req.body,
+            { new: true }
+        )
+
+        if (!document) {
+            return res.status(404).json({ message: 'Docuemnt not found' })
+        }
+
+        res.status(200).json(document)
+    } catch(error) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
 module.exports = {
     index,
     create,
     show,
+    update,
 }
