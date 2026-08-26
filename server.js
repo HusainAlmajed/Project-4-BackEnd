@@ -19,7 +19,7 @@ const agreementCtrl = require("./controllers/agreement");
 
 //controllers
 const authCtrl = require('./controllers/auth')
-
+const inspectionCtrl = require("./controllers/inspection");
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI);
@@ -60,6 +60,12 @@ app.get("/agreements/:agreementId", verifyToken, agreementCtrl.show);
 app.put("/agreements/:agreementId", verifyToken, agreementCtrl.update);
 app.delete("/agreements/:agreementId", verifyToken, agreementCtrl.deleteAgreement);
 
+// Inspection Routes
+app.get("/inspections", verifyToken, inspectionCtrl.index);
+app.post("/inspections", verifyToken, inspectionCtrl.create);
+app.get("/inspections/:inspectionId", verifyToken, inspectionCtrl.show);
+app.put("/inspections/:inspectionId", verifyToken, inspectionCtrl.update);
+app.delete("/inspections/:inspectionId", verifyToken, inspectionCtrl.deleteInspection);
 
 // Start server
 app.listen(PORT, () => {
