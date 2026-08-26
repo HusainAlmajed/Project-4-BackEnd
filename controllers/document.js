@@ -24,7 +24,21 @@ const create = async (req , res) => {
     }
 }
 
+const show = async (req , res) => {
+    try{
+        const document = await Document.findById(req.params.documentId).populate('agreement')
+
+        if (!document) {
+            return res.status(404).json({ message: 'Document not found' })
+        }
+        res.status(200).json(document)
+    } catch(error) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
 module.exports = {
     index,
     create,
+    show,
 }
