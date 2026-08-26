@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const agreementSchema = new  mongoose.Schema({
     type: {
         type: String,
+        enum: ['warranty', 'insurance'],
         required: true,
     },
     startDate: {
