@@ -12,6 +12,8 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
+const verifyToken = require("./middleware/verify-token");
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI);
 
