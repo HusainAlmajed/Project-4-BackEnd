@@ -12,9 +12,14 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
+//middelware
 const verifyToken = require("./middleware/verify-token");
 const assetCtrl = require("./controllers/asset");
 const agreementCtrl = require("./controllers/agreement");
+
+//controllers
+const authCtrl = require('./controllers/auth')
+
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI);
@@ -37,6 +42,10 @@ app.get("/", (req, res) => {
   res.send("Backend is working!");
 });
 
+// Routes
+app.post("/sign-up/customer", authCtrl.customerSignUp)
+app.post("/sign-up/owner", authCtrl.ownerSignUp)
+app.post("/sign-in", authCtrl.signIn)
 // Asset Routes
 app.get("/assets", verifyToken, assetCtrl.index);
 app.post("/assets", verifyToken, assetCtrl.create);

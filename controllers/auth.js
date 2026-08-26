@@ -1,0 +1,119 @@
+const User = require("../models/users")
+const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
+const Business = require('../models/business')
+
+
+const customerSignUp = async (req,res) => {
+    try {
+        const userInDatabase = await User.findOne({ email: req.body.email })
+
+        if (userInDatabase) {
+            return res.status(409).json({ err: 'A user with this email already exists.' })
+        } 
+
+        const hashedPassword = bcrypt.hashSync(req.body.password, 10)
+
+        const userData ={
+            username: req.body.username,
+            password: hashedPassword,
+            email: req.body.email,
+            phone: req.body.phone,
+            role: "customer",
+        }
+
+        const passwordRegex =
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/
+
+        if (!passwordRegex.test(req.body.password)) {
+            return res.status(400).json({
+                err: "Password must be at least 8 characters and contain an uppercase letter, lowercase letter, number, and special character."
+            })
+        }
+        const user = await User.create(userData)
+
+        const payload = { username: user.username, _id: user._id, role: user.role }
+
+        const token = jwt.sign({ payload }, process.env.JWT_SECRET)
+
+        res.status(201).json({ token })
+    } catch (error) {
+        res.status(400).json({ err: error.message })
+    }
+}
+
+const ownerSignUp = async(req,res) => {
+        try {
+        const userInDatabase = await User.findOne({ email: req.body.email })
+
+        if (userInDatabase) {
+            return res.status(409).json({ err: 'A user with this email already exists.' })
+        } 
+
+        const hashedPassword = bcrypt.hashSync(req.body.password, 10)
+
+        const userData = {
+            username: req.body.username,
+            password: hashedPassword,
+            email: req.body.email,
+            phone: req.body.phone,
+            role: "owner",
+        }
+        const user = await User.create(userData)
+
+        const passwordRegex =
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/
+
+        if (!passwordRegex.test(req.body.password)) {
+            return res.status(400).json({
+                err: "Password must be at least 8 characters and contain an uppercase letter, lowercase letter, number, and special character."
+            })
+        }
+        const businessData = {
+            name: req.body.name,
+            type: req.body.type,
+            owner: user._id,
+        }
+
+        const business = await Business.create(businessData)
+
+        const payload = { username: user.username, _id: user._id, role: user.role }
+
+        const token = jwt.sign({ payload }, process.env.JWT_SECRET)
+
+        res.status(201).json({ token})
+        
+    } catch (error) {
+        res.status(400).json({ err: error.message })
+    }
+}
+
+const signIn = async(req,res) => {
+    try {
+        
+        const userInDatabase = await User.findOne({ email: req.body.email })
+
+        if (!userInDatabase) {
+            return res.status(404).json({ err: 'Invalid email or password.' })
+        }
+        const validPassword = bcrypt.compareSync(req.body.password, userInDatabase.password)
+
+        if (!validPassword) {
+            return res.status(401).json({ err: 'Invalid email or password..' })
+        }
+
+        const payload = { username: userInDatabase.username, _id: userInDatabase._id, role: userInDatabase.role }
+        const token = jwt.sign({ payload }, process.env.JWT_SECRET)
+
+        res.status(200).json({ message: "Signed in sucessfully" })
+
+    } catch (error) {
+        res.status(500).json({ err: err.message })
+    }
+}
+
+module.exports = {
+    customerSignUp,
+    ownerSignUp,
+    signIn,
+}
