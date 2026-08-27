@@ -49,10 +49,7 @@ app.post("/sign-up/owner", authCtrl.ownerSignUp)
 app.post("/sign-in", authCtrl.signIn)
 // Asset Routes
 app.get("/assets", verifyToken, assetCtrl.index);
-app.post("/assets", verifyToken, assetCtrl.create);
-app.get("/assets/:assetId", verifyToken, assetCtrl.show);
-app.put("/assets/:assetId", verifyToken, assetCtrl.update);
-app.delete("/assets/:assetId", verifyToken, assetCtrl.deleteAsset);
+
 
 // Agreement Routes
 app.get("/agreements", verifyToken, agreementCtrl.index);

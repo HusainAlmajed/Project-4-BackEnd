@@ -5,6 +5,7 @@ const agreementSchema = new  mongoose.Schema({
         type: String,
         enum: ['warranty', 'insurance'],
         required: true,
+        trim: true,
     },
     startDate: {
         type: Date,
@@ -21,6 +22,7 @@ const agreementSchema = new  mongoose.Schema({
     },
     description: {
         type: String,
+        trim: true,
         required: false,
     },
     owner: {
@@ -41,4 +43,5 @@ const agreementSchema = new  mongoose.Schema({
 },{timestamps: true})
 
 const Agreement = mongoose.model('Agreement', agreementSchema)
+
 module.exports = Agreement
