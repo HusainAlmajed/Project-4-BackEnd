@@ -31,7 +31,7 @@ const agreementSchema = new  mongoose.Schema({
     customer: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: false,
+        required: true,
     },
     asset: {
         type: mongoose.Schema.Types.ObjectId,
