@@ -1,4 +1,5 @@
 const Agreement = require('../models/agreement');
+const Asset = require('../models/asset');
 
 const index = async (req, res) => {
     try{
@@ -15,6 +16,13 @@ const index = async (req, res) => {
 
 const create = async (req, res) => {
     try{
+        const asset = await Asset.create({
+            name: req.body.assetName,
+            type: req.body.assetType,
+            owner: req.user._id,
+            business: req.body.business,
+        });
+        
         const agreement = await Agreement.create({
             type: req.body.type,
             startDate: req.body.startDate,
@@ -23,9 +31,16 @@ const create = async (req, res) => {
             description: req.body.description,
             owner: req.user._id,
             customer: req.body.customer,
-            asset: req.body.asset,
+            asset: asset._id, 
         });
-        res.status(201).json(agreement);
+
+
+        const populatedAgreement = await Agreement.findById(agreement._id)
+            .populate('owner')
+            .populate('customer')
+            .populate('asset');
+
+        res.status(201).json(populatedAgreement);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -37,6 +52,7 @@ const show = async (req, res) => {
         .populate('owner')
         .populate('customer')
         .populate('asset')
+
         if (!agreement) {
             return res.status(404).json({ message: 'Agreement not found' });
         }
@@ -52,7 +68,11 @@ const update = async (req, res) => {
             req.params.agreementId,
             req.body,
             { new: true }
-        );
+        )
+        .populate('owner')
+        .populate('customer')
+        .populate('asset');
+
         if (!agreement) {
             return res.status(404).json({ message: 'Agreement not found' });
         }
@@ -65,9 +85,13 @@ const update = async (req, res) => {
 const deleteAgreement = async (req, res) => {
     try {
         const agreement = await Agreement.findByIdAndDelete(req.params.agreementId);
+
         if (!agreement) {
             return res.status(404).json({ message: 'Agreement not found' });
         }
+
+        await Asset.findByIdAndDelete(agreement.asset);
+
         res.status(200).json({ message: 'Agreement deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: error.message });
