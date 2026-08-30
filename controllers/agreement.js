@@ -31,7 +31,7 @@ const create = async (req, res) => {
             status: req.body.status,
             description: req.body.description,
             owner: req.user._id,
-            customer: req.body.customer,
+            customer: req.body.customer || req.user._id,
             asset: asset._id,
         })
 
