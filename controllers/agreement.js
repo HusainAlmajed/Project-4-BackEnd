@@ -14,15 +14,16 @@ const index = async (req, res) => {
     }
 }
 
+
 const create = async (req, res) => {
-    try{
+    try {
+
         const asset = await Asset.create({
             name: req.body.assetName,
-            type: req.body.assetType,
+            assetType: req.body.assetType,
             owner: req.user._id,
-            business: req.body.business,
-        });
-        
+        })
+
         const agreement = await Agreement.create({
             type: req.body.type,
             startDate: req.body.startDate,
@@ -31,20 +32,22 @@ const create = async (req, res) => {
             description: req.body.description,
             owner: req.user._id,
             customer: req.body.customer,
-            asset: asset._id, 
-        });
-
+            asset: asset._id,
+        })
 
         const populatedAgreement = await Agreement.findById(agreement._id)
-            .populate('owner')
-            .populate('customer')
-            .populate('asset');
+            .populate("owner")
+            .populate("customer")
+            .populate("asset")
 
-        res.status(201).json(populatedAgreement);
+        res.status(201).json(populatedAgreement)
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error("CREATE AGREEMENT ERROR:", error)
+        res.status(500).json({ message: error.message })
     }
 }
+
+
 
 const show = async (req, res) => {
     try{

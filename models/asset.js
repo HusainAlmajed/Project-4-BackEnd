@@ -6,7 +6,7 @@ const assetSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    type: {
+    assetType: {
         type: String,
         enum: ['equipment', 'vehicle', 'property', 'electronic', 'other'],
         required: true,
@@ -19,7 +19,7 @@ const assetSchema = new mongoose.Schema({
     business:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Business',
-        required: true,
+        required: false,
     }
 },{timestamps: true})
 
