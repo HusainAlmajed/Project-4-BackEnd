@@ -22,7 +22,6 @@ const agreementSchema = new  mongoose.Schema({
     },
     description: {
         type: String,
-        trim: true,
         required: false,
     },
     owner: {
