@@ -111,10 +111,24 @@ const deleteAgreement = async (req, res) => {
     }
 }
 
+const customerAgreements = async (req, res) => {
+    try {
+        const agreements = await Agreement.find({ customer: req.user._id })
+            .populate('owner')
+            .populate('customer')
+            .populate('asset');
+
+        res.status(200).json(agreements);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     index,
     create,
     show,
     update,
     deleteAgreement,
+    customerAgreements,
 }
