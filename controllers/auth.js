@@ -4,17 +4,17 @@ const jwt = require("jsonwebtoken")
 const Business = require('../models/business')
 
 
-const customerSignUp = async (req,res) => {
+const customerSignUp = async (req, res) => {
     try {
         const userInDatabase = await User.findOne({ email: req.body.email })
 
         if (userInDatabase) {
             return res.status(409).json({ err: 'A user with this email already exists.' })
-        } 
+        }
 
         const hashedPassword = bcrypt.hashSync(req.body.password, 10)
 
-        const userData ={
+        const userData = {
             username: req.body.username,
             password: hashedPassword,
             email: req.body.email,
@@ -32,7 +32,13 @@ const customerSignUp = async (req,res) => {
         }
         const user = await User.create(userData)
 
-        const payload = { username: user.username, _id: user._id, role: user.role }
+        const payload = {
+            username: user.username,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+            _id: user._id
+        }
 
         const token = jwt.sign({ payload }, process.env.JWT_SECRET)
 
@@ -42,13 +48,13 @@ const customerSignUp = async (req,res) => {
     }
 }
 
-const ownerSignUp = async(req,res) => {
-        try {
+const ownerSignUp = async (req, res) => {
+    try {
         const userInDatabase = await User.findOne({ email: req.body.email })
 
         if (userInDatabase) {
             return res.status(409).json({ err: 'A user with this email already exists.' })
-        } 
+        }
 
         const hashedPassword = bcrypt.hashSync(req.body.password, 10)
 
@@ -77,20 +83,26 @@ const ownerSignUp = async(req,res) => {
 
         const business = await Business.create(businessData)
 
-        const payload = { username: user.username, _id: user._id, role: user.role }
+        const payload = {
+            username: user.username,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+            _id: user._id
+        }
 
         const token = jwt.sign({ payload }, process.env.JWT_SECRET)
 
-        res.status(201).json({ token})
-        
+        res.status(201).json({ token })
+
     } catch (error) {
         res.status(400).json({ err: error.message })
     }
 }
 
-const signIn = async(req,res) => {
+const signIn = async (req, res) => {
     try {
-        
+
         const userInDatabase = await User.findOne({ email: req.body.email })
 
         if (!userInDatabase) {
@@ -102,10 +114,16 @@ const signIn = async(req,res) => {
             return res.status(401).json({ err: 'Invalid email or password..' })
         }
 
-        const payload = { username: userInDatabase.username, _id: userInDatabase._id, role: userInDatabase.role }
+        const payload = {
+            username: userInDatabase.username,
+            email: userInDatabase.email,
+            phone: userInDatabase.phone,
+            _id: userInDatabase._id,
+            role: userInDatabase.role
+        }
         const token = jwt.sign({ payload }, process.env.JWT_SECRET)
 
-        res.status(200).json({token })
+        res.status(200).json({ token })
 
     } catch (error) {
         res.status(500).json({ err: err.message })
