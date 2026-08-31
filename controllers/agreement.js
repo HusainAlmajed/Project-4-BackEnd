@@ -1,5 +1,6 @@
 const Agreement = require('../models/agreement');
 const Asset = require('../models/asset');
+const User = require('../models/users');
 
 const index = async (req, res) => {
     try{
@@ -18,6 +19,15 @@ const index = async (req, res) => {
 const create = async (req, res) => {
     try {
 
+        const customer = await User.findOne({ 
+            phone: req.body.customerPhone,
+            role: 'customer'
+        })
+
+        if (!customer) {
+            return res.status(404).json({ message: 'Customer not found' });
+        }
+
         const asset = await Asset.create({
             name: req.body.assetName,
             assetType: req.body.assetType,
@@ -31,7 +41,7 @@ const create = async (req, res) => {
             status: req.body.status,
             description: req.body.description,
             owner: req.user._id,
-            customer: req.body.customer || req.user._id,
+            customer: customer._id,
             asset: asset._id,
         })
 
