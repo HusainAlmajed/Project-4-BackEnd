@@ -6,10 +6,11 @@ const inspectionSchema = new mongoose.Schema({
         enum: ['before' , 'after'],
         required: true,
     },
-    images: {
+    images: [{
         type: String,
         required: true,
-    },
+    
+    }],
     notes: {
         type: String,
     },

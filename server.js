@@ -47,6 +47,7 @@ app.get("/", (req, res) => {
 app.post("/sign-up/customer", authCtrl.customerSignUp)
 app.post("/sign-up/owner", authCtrl.ownerSignUp)
 app.post("/sign-in", authCtrl.signIn)
+app.get("/users/:userId", verifyToken, authCtrl.show)
 app.put("/users/:userId", verifyToken, authCtrl.update)
 // Asset Routes
 app.get("/assets", verifyToken, assetCtrl.index);
