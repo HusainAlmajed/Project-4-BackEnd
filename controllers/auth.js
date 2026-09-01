@@ -130,8 +130,40 @@ const signIn = async (req, res) => {
     }
 }
 
+const update = async (req, res) => {
+    try {
+
+        const user = await User.findByIdAndUpdate(
+            req.params.userId,
+            {
+                username: req.body.username,
+                email: req.body.email,
+                phone: req.body.phone,
+                profileImage: req.body.profileImage
+            },
+            {
+                new: true
+            }
+        )
+
+        if (!user) {
+            return res.status(404).json({
+                err: "User not found"
+            })
+        }
+
+        res.status(200).json(user)
+
+    } catch (error) {
+        res.status(400).json({
+            err: error.message
+        })
+    }
+}
+
 module.exports = {
     customerSignUp,
     ownerSignUp,
     signIn,
+    update,
 }
