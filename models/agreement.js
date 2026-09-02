@@ -38,6 +38,11 @@ const agreementSchema = new  mongoose.Schema({
         ref: 'Asset',
         required: true,
     },
+    createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+},
 },{timestamps: true})
 
 const Agreement = mongoose.model('Agreement', agreementSchema)

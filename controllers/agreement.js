@@ -71,6 +71,7 @@ const create = async (req, res) => {
 
             customer: customerId,
             asset: asset._id,
+            createdBy: req.user._id,
         });
 
         const populatedAgreement = await Agreement.findById(agreement._id)
@@ -89,13 +90,13 @@ const create = async (req, res) => {
     }
 };
 
-
 const show = async (req, res) => {
     try {
         const agreement = await Agreement.findById(req.params.agreementId)
             .populate("owner")
             .populate("customer")
-            .populate("asset");
+            .populate("asset")
+            .populate("createdBy");
 
         if (!agreement) {
             return res.status(404).json({
@@ -103,9 +104,13 @@ const show = async (req, res) => {
             });
         }
 
-        const business = await Business.findOne({
-            owner: agreement.owner._id
-        });
+        let business = null;
+
+        if (agreement.owner) {
+            business = await Business.findOne({
+                owner: agreement.owner._id
+            });
+        }
 
         const result = {
             ...agreement.toObject(),
@@ -122,6 +127,8 @@ const show = async (req, res) => {
         });
     }
 };
+
+
 
 const update = async (req, res) => {
     try{
