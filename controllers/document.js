@@ -1,12 +1,25 @@
 const Document = require('../models/document')
 
-const index = async (req , res) => {
-    try{
-        const documents = await Document.find().populate('agreement')
+const index = async (req, res) => {
+    try {
+
+        const filter = {}
+
+        if (req.query.agreement) {
+            filter.agreement = req.query.agreement
+        }
+
+        const documents = await Document.find(filter)
 
         res.status(200).json(documents)
-    }catch(error) {
-        res.status(500).json({ message: error.message })
+
+    } catch (error) {
+
+        console.error("GET DOCUMENTS ERROR:", error)
+
+        res.status(500).json({
+            message: error.message
+        })
     }
 }
 
