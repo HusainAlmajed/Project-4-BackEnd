@@ -1,6 +1,7 @@
 const Agreement = require('../models/agreement');
 const Asset = require('../models/asset');
 const User = require('../models/users');
+const Business = require('../models/business');
 
 const index = async (req, res) => {
     try{
@@ -90,20 +91,37 @@ const create = async (req, res) => {
 
 
 const show = async (req, res) => {
-    try{
+    try {
         const agreement = await Agreement.findById(req.params.agreementId)
-        .populate('owner')
-        .populate('customer')
-        .populate('asset')
+            .populate("owner")
+            .populate("customer")
+            .populate("asset");
 
         if (!agreement) {
-            return res.status(404).json({ message: 'Agreement not found' });
+            return res.status(404).json({
+                message: "Agreement not found"
+            });
         }
-        res.status(200).json(agreement);
-    }catch (error) {
-        res.status(500).json({ message: error.message });
+
+        const business = await Business.findOne({
+            owner: agreement.owner._id
+        });
+
+        const result = {
+            ...agreement.toObject(),
+            business
+        };
+
+        res.status(200).json(result);
+
+    } catch (error) {
+        console.error("GET AGREEMENT ERROR:", error);
+
+        res.status(500).json({
+            message: error.message
+        });
     }
-}
+};
 
 const update = async (req, res) => {
     try{
