@@ -15,48 +15,78 @@ const index = async (req, res) => {
     }
 }
 
-
 const create = async (req, res) => {
     try {
+        let customerId;
 
-        const customer = await User.findOne({ 
-            phone: req.body.customerPhone,
-            role: 'customer'
-        })
+     
+        if (req.user.role === "owner") {
+            const customer = await User.findOne({
+                phone: req.body.customerPhone,
+                role: "customer"
+            });
 
-        if (!customer) {
-            return res.status(404).json({ message: 'Customer not found' });
+            if (!customer) {
+                return res.status(404).json({
+                    message: "Customer not found"
+                });
+            }
+
+            customerId = customer._id;
         }
 
+      
+        else if (req.user.role === "customer") {
+            customerId = req.user._id;
+        }
+
+      
+        else {
+            return res.status(403).json({
+                message: "Only owners and customers can create agreements"
+            });
+        }
+
+     
         const asset = await Asset.create({
             name: req.body.assetName,
             assetType: req.body.assetType,
-            owner: req.user._id,
-        })
+            owner: req.user.role === "owner"
+                ? req.user._id
+                : req.body.ownerId
+        });
 
+        // Create agreement
         const agreement = await Agreement.create({
             type: req.body.type,
             startDate: req.body.startDate,
             endDate: req.body.endDate,
             status: req.body.status,
             description: req.body.description,
-            owner: req.user._id,
-            customer: customer._id,
+
+            owner: req.user.role === "owner"
+                ? req.user._id
+                : req.body.ownerId,
+
+            customer: customerId,
             asset: asset._id,
-        })
+        });
 
         const populatedAgreement = await Agreement.findById(agreement._id)
             .populate("owner")
             .populate("customer")
-            .populate("asset")
+            .populate("asset");
 
-        res.status(201).json(populatedAgreement)
+        res.status(201).json(populatedAgreement);
+
     } catch (error) {
-        console.error("CREATE AGREEMENT ERROR:", error)
-        res.status(500).json({ message: error.message })
-    }
-}
+        console.error("CREATE AGREEMENT ERROR:", error);
 
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
 
 
 const show = async (req, res) => {
@@ -111,18 +141,7 @@ const deleteAgreement = async (req, res) => {
     }
 }
 
-const customerAgreements = async (req, res) => {
-    try {
-        const agreements = await Agreement.find({ customer: req.user._id })
-            .populate('owner')
-            .populate('customer')
-            .populate('asset');
 
-        res.status(200).json(agreements);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
 
 module.exports = {
     index,
@@ -130,5 +149,4 @@ module.exports = {
     show,
     update,
     deleteAgreement,
-    customerAgreements,
 }

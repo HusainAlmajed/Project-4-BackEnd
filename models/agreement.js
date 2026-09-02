@@ -18,7 +18,6 @@ const agreementSchema = new  mongoose.Schema({
     status: {
         type: String,
         enum: ['active', 'expiring soon', 'expired'],
-        default: 'active',
     },
     description: {
         type: String,
@@ -27,7 +26,7 @@ const agreementSchema = new  mongoose.Schema({
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
+        required: false,
     },
     customer: {
         type: mongoose.Schema.Types.ObjectId,

@@ -14,7 +14,7 @@ const assetSchema = new mongoose.Schema({
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
+        required: false,
     },
     business:{
         type: mongoose.Schema.Types.ObjectId,
