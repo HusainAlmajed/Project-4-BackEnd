@@ -23,6 +23,7 @@ const documentCtrl = require("./controllers/document")
 const assetCtrl = require("./controllers/asset");
 const agreementCtrl = require("./controllers/agreement");
 const adminCtrl = require("./controllers/admin")
+const businessCtrl = require("./controllers/business")
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI);
@@ -81,6 +82,9 @@ app.get("/admin/users",verifyToken,adminOnly,adminCtrl.indexUsers)
 app.get("/admin/users/:userId",verifyToken, adminOnly, adminCtrl.showUser)
 app.put("/admin/users/:userId",verifyToken, adminOnly, adminCtrl.updateUserRole)
 app.delete("/admin/users/:userId",verifyToken, adminOnly, adminCtrl.deleteUser)
+app.get("/admin/businesses",verifyToken, adminOnly, businessCtrl.indexBusinesses)
+app.get("/admin/businesses/:businessId",verifyToken, adminOnly, businessCtrl.showBusiness)
+app.delete("/admin/businesses/:businessId",verifyToken, adminOnly, businessCtrl.deleteBusiness)
 
 // Start server
 app.listen(PORT, () => {
