@@ -14,13 +14,15 @@ const PORT = process.env.PORT || 3000;
 
 //middelware
 const verifyToken = require("./middleware/verify-token");
-const assetCtrl = require("./controllers/asset");
-const agreementCtrl = require("./controllers/agreement");
+const adminOnly = require("./middleware/admin-only")
 
 //controllers
 const authCtrl = require('./controllers/auth')
 const inspectionCtrl = require("./controllers/inspection");
 const documentCtrl = require("./controllers/document")
+const assetCtrl = require("./controllers/asset");
+const agreementCtrl = require("./controllers/agreement");
+const adminCtrl = require("./controllers/admin")
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI);
@@ -73,6 +75,12 @@ app.post("/documents", verifyToken, documentCtrl.create);
 app.get("/documents/:documentId", verifyToken, documentCtrl.show);
 app.put("/documents/:documentId", verifyToken, documentCtrl.update);
 app.delete("/documents/:documentId", verifyToken, documentCtrl.deleteDocument);
+
+//admin routes
+app.get("/admin/users",verifyToken,adminOnly,adminCtrl.indexUsers)
+app.get("/admin/users/:userId",verifyToken, adminOnly, adminCtrl.showUser)
+app.put("/admin/users/:userId",verifyToken, adminOnly, adminCtrl.updateUserRole)
+app.delete("/admin/users/:userId",verifyToken, adminOnly, adminCtrl.deleteUser)
 
 // Start server
 app.listen(PORT, () => {
